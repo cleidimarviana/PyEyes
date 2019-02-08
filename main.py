@@ -1,25 +1,32 @@
 import time
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+import sys
 
 class Watcher:
-    DIRECTORY = "C:\Projetos"
+    
+    DIRECTORY = ""
 
     def __init__(self):
         self.observer = Observer()
 
     def run(self):
-        event_handler = Handler()
-        self.observer.schedule(event_handler, self.DIRECTORY, recursive=True)
-        self.observer.start()
-        try:
-            while True:
-                time.sleep(5)
-        except:
-            self.observer.stop()
-            print("There was an error trying to get an eagle view.")
+        if len(sys.argv) > 1:
+            event_h = Handler()
+            self.observer.schedule(event_h, sys.argv[1], recursive=True)
+            self.observer.start()
+            
+            try:
+                while True:
+                    time.sleep(2)
+            except:
+                self.observer.stop()
+                print("There was an error trying to get an eagle view.")
 
-        self.observer.join()
+            self.observer.join()         
+        else:
+            print('Incorrect directory or path. Note that it has been entered correctly.')
+        
 
 class Handler(FileSystemEventHandler):
 
@@ -43,7 +50,7 @@ class Handler(FileSystemEventHandler):
        
         elif event.event_type == 'moved':
             # Taken any action here when a file is renamed.
-            print ("Renamed directory: " + event.src_path)
+            print ("Renamed: " + event.src_path)
 
 if __name__ == '__main__':
     w = Watcher()
