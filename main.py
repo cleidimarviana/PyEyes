@@ -1,62 +1,32 @@
-import time
 import sys
-import os
+import time
+import logging
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+from watchdog.events import LoggingEventHandler
+import os
 
-class Watcher:
 
-    def __init__(self):
-        self.observer = Observer()
+print("Start monitor PyEyes") 
 
-    def run(self):
-        if len(sys.argv) > 1:
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
+    path = sys.argv[1] if len(sys.argv) > 1 else '.'
 
-            path = sys.argv[1]
+    if os.path.isdir(path):
+        event_handler = LoggingEventHandler()
+        observer = Observer()
+        observer.schedule(event_handler, path, recursive=True)
+        observer.start()
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            observer.stop()
+            observer.join()
+    else:
+        print("\nIncorrect directory or path. Note that it has been entered correctly.")
 
-            if os.path.isdir(path):
 
-                event_h = Handler()
-                self.observer.schedule(event_h, path, recursive=True)
-                self.observer.start()
-                
-                try:
-                    while True:
-                        time.sleep(2)
-                except:
-                    self.observer.stop()
-                    print("\nThere was an error trying to get an eagle view.")
 
-                self.observer.join() 
-            else:
-                print("\nIncorrect directory or path. Note that it has been entered correctly.")         
-        else:
-            print('\nWithout any argument I do not work.') 
-
-class Handler(FileSystemEventHandler):
-
-    @staticmethod
-    def on_any_event(event):
-
-        if event.is_directory:
-            return None
-
-        elif event.event_type == 'created':
-            # Take any action here when a file is first created.
-            print ("Created: " + event.src_path)
-
-        elif event.event_type == 'modified':
-            # Taken any action here when a file is modified.
-            print ("Modified: " + event.src_path)
-        
-        elif event.event_type == 'deleted':
-            # Taken any action here when a file is deleted.
-            print ("Deleted: " + event.src_path)
-       
-        elif event.event_type == 'moved':
-            # Taken any action here when a file is renamed.
-            print ("Renamed: " + event.src_path)
-
-if __name__ == '__main__':
-    w = Watcher()
-    w.run()
