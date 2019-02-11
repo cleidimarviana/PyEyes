@@ -1,32 +1,37 @@
 import time
+import sys
+import os
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-import sys
 
 class Watcher:
-    
-    DIRECTORY = ""
 
     def __init__(self):
         self.observer = Observer()
 
     def run(self):
         if len(sys.argv) > 1:
-            event_h = Handler()
-            self.observer.schedule(event_h, sys.argv[1], recursive=True)
-            self.observer.start()
-            
-            try:
-                while True:
-                    time.sleep(2)
-            except:
-                self.observer.stop()
-                print("There was an error trying to get an eagle view.")
 
-            self.observer.join()         
+            path = sys.argv[1]
+
+            if os.path.isdir(path):
+
+                event_h = Handler()
+                self.observer.schedule(event_h, path, recursive=True)
+                self.observer.start()
+                
+                try:
+                    while True:
+                        time.sleep(2)
+                except:
+                    self.observer.stop()
+                    print("\nThere was an error trying to get an eagle view.")
+
+                self.observer.join() 
+            else:
+                print("\nIncorrect directory or path. Note that it has been entered correctly.")         
         else:
-            print('Incorrect directory or path. Note that it has been entered correctly.')
-        
+            print('\nWithout any argument I do not work.') 
 
 class Handler(FileSystemEventHandler):
 
