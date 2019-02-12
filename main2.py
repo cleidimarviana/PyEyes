@@ -18,7 +18,7 @@ class Watcher:
 
             if os.path.isdir(path):
 
-                event_h = Handler()
+                event_h = LoggingEventHandler()
                 self.observer.schedule(event_h, path, recursive=True)
                 self.observer.start()
                                 
@@ -34,9 +34,9 @@ class Watcher:
                 print("\nIncorrect directory or path. Note that it has been entered correctly.")         
         else:
             print('\nWithout any argument I do not work.') 
-
+            
+            
 class Handler(FileSystemEventHandler):
-
     @staticmethod
     def on_any_event(event):
 
