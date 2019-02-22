@@ -13,8 +13,8 @@ class Watcher:
 
     def run(self):
         logging.basicConfig(level=logging.INFO,
-                            format='%(asctime)s - %(message)s',
-                            datefmt='%Y-%m-%d %H:%M:%S')
+                            format='%(asctime)s - %()s',
+                            datefmt='%H:%M:%S')
 
         path = sys.argv[1] if len(sys.argv) > 1 else '.'
 

@@ -13,3 +13,4 @@ PyEyes is used to monitor and control a change within a specific directory in wh
 
  - https://pypi.org/project/watchdog/
  - https://www.programcreek.com/python/example/96680/watchdog.events.FileSystemEventHandler
+ - https://python.org.br/
